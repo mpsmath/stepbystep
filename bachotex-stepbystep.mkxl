@@ -1,0 +1,785 @@
+\mainlanguage[en]
+
+\usecolors[crayola]
+
+\definepalet
+  [MyColors]
+  [1=CosmicCobalt,
+   2=MysticPearl,
+   3=YellowOrange,
+   4=LemonYellow]
+
+\definepapersize[CB][width=720pt,height=480pt]
+\setuppapersize[CB]
+
+\setuplayout
+  [margin=0cm,
+   width=fit,
+   height=fit,
+   topspace=1cm,
+   bottomspace=0.5cm,
+   backspace=1cm,
+   header=1cm,
+   headerdistance=1cm,
+   footer=0.5cm,
+   footerdistance=0.5cm]
+
+\startuseMPgraphic{bakgrund}
+fill unitsquare 
+     xyscaled (OverlayWidth,OverlayHeight)
+     withcolor "MyColors:1" ;
+\stopuseMPgraphic
+
+\defineoverlay[bakgrund][{\useMPgraphic{bakgrund}}]
+\setupbackgrounds[paper][background={bakgrund}]
+
+\setupcolors[textcolor=MyColors:4]
+
+\definebodyfontenvironment[16pt][interlinespace=20pt]
+
+\usebodyfont[bonum]
+\usebodyfont[bonum-nt]
+
+\setupbodyfont[bonum,16pt]
+
+\startMPenvironment
+\setupbodyfont[small,ss]
+\stopMPenvironment
+
+\setupinteraction
+  [state=start,
+   contrastcolor=,
+   color=]
+
+\setuppagenumbering[state=stop]
+
+\definecharacterkerning[mine][factor=0.075]
+
+\setupheader
+  [text]
+  [style={\bf\WORD\setcharacterkerning[mine]},
+   color=MyColors:2]
+
+\setupheadertexts
+  [text]
+  [{\getmarking[title]}][]
+
+\setupfooter
+  [text]
+  [style={\tfxx\WORD\setcharacterkerning[mine]},
+   color=MyColors:2]
+
+\setupfootertexts
+  [text]
+  [{BachoTeX, April|--|May 2023}]
+  [{Mikael Sundqvist}]
+
+\setuphead
+  [part]
+  [placehead=yes,
+   number=no,
+   page={yes,header,footer,right},
+   style={\definedfont[Bold at 24pt]},
+   alternative=middle,
+   color=MyColors:2,
+   header=high,
+   footer=high,
+   align=flushleft,]
+
+\setuphead
+  [title]
+  [placehead=empty,
+   after=]
+
+\definehead
+  [mtitle]
+  [title]
+
+\setuphead
+  [mtitle]
+  [page=no]
+
+\setupexternalfigure[
+  directory={screendumps},
+]
+
+\setupitemgroup
+  [itemize]
+  [each]
+  [before=,
+   color=MyColors:2,
+   margin=4cm]
+
+\setuptyping
+  [color=MyColors:3]
+
+\starttexdefinition ShowPage #1
+\startTEXpage
+  [offset=1ts,
+   background=color,
+   backgroundcolor=MyColors:3]
+  \externalfigure
+    [stepbystep.pdf]
+    [page=#1,
+     background=color,
+     backgroundcolor=white]
+\stopTEXpage
+\stoptexdefinition
+
+\starttext
+
+\startbuffer[titlepage]
+\startMPpage
+    fill Page enlarged 1mm withcolor "MyColors:1" ;
+
+    picture p ; p := textext( "\ttbf STEP"          ) ;
+    picture q ; q := textext( "\ttbf   B\kern-1ptY" ) ;
+    picture r ; r := textext( "\ttbf STEP"          ) ;
+
+    p := p xsized 0.5PaperWidth ;    
+    q := q xsized 0.5PaperWidth ;    
+    r := r xsized 0.5PaperWidth ;
+
+    p := (p shifted - (center p) shifted ( 0.25PaperWidth, 0.875PaperHeight ) ) ;
+    q := (q shifted - (center q) shifted ( 0.5PaperWidth, 0.5PaperHeight   ) ) ;
+    r := (r shifted - (center r) shifted ( 0.75PaperWidth, 0.125PaperHeight ) ) ;
+
+    draw p withcolor "MyColors:4" ;
+    draw q withcolor "MyColors:3" ;
+    draw r withcolor "MyColors:2" ;
+
+    setbounds currentpicture to Page ;
+\stopMPpage
+\stopbuffer
+\getbuffer[MyColors]
+\getbuffer[titlepage]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={What is this?}]
+
+\startitemize
+  \item \emph{One} possible way to set up a \CONTEXT\ document.
+  \item A way to show a style that adapts as we go.
+  \item An experiment.
+\stopitemize
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={What is this not?}]
+
+\startitemize
+  \item A complete guide.
+  \item A song by NKOTB.
+\stopitemize
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Usual structure}]
+
+\starttyping
+setups
+
+\starttext
+the content of the file
+\stoptext
+\stoptyping
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Structure in this document}]
+
+\starttyping
+\starttext
+content
+setups
+more content
+more setups
+...
+\stoptext
+\stoptyping
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={The size of the paper}]
+
+\starttyping
+\definepapersize
+  [example]
+  [width=8.5es,
+   height=11es]
+
+\setuppapersize[example]
+\stoptyping
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{4}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Showing the layout}]
+
+\starttyping
+\showframe
+\stoptyping
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Setting the layout}]
+
+\starttyping
+\setuplayout
+  [backspace=0.1\paperwidth,
+   leftmargin=0pt,
+   rightmargindistance=0.025\paperwidth,
+   rightmargin=0.25\paperwidth,
+   width=fit,
+   topspace=0.075\paperheight,
+   header=\lineheight,
+   headerdistance=0.025\paperwidth,
+   footerdistance=0pt,
+   footer=0pt,
+   height=fit]
+\stoptyping
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{6}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Choosing a font}]
+
+\startbuffer
+\definefontfeature
+  [default]
+  [default]
+  [protrusion=quality]
+
+\definebodyfontenvironment
+  [9pt]
+  [interlinespace=13pt]
+
+\setupbodyfont[bonum,9pt]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{7}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Colors}]
+
+\startbuffer
+\usecolors[crayola]
+
+\definepalet
+  [MyColors]
+  [1=CosmicCobalt,
+   2=MysticPearl,
+   3=YellowOrange,
+   4=LemonYellow]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{8}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Code listings}]
+
+\startbuffer
+\setuptyping
+  [color=MyColors:1]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Alignment, indentation, spacing}]
+
+\startbuffer
+\setupalign[hanging,height]
+
+% \setupindenting[yes,medium]
+
+\setupwhitespace[big]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{10}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Chapters}]
+
+\startbuffer
+\setuphead
+  [chapter]
+  [style={\switchtobodyfont[24pt]\bf},
+   numbercolor=MyColors:3,
+   header=high,
+   page=yes,
+   distance=2em]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Sections}]
+
+\startbuffer
+\definecharacterkerning
+  [Section]
+  [factor=0.07]
+
+\setuphead
+  [section]
+  [style={\bf\WORD\setcharacterkerning[Section]},
+   number=no]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{12}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Headers (style)}]
+
+\startbuffer
+\setuppagenumbering
+  [location=none,
+   alternative={singlesided,doublesided}]
+
+\definecharacterkerning
+  [Header]
+  [factor=0.05]
+
+\setupheader
+  [style={\WORD\setcharacterkerning[Header]}]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Headers (content)}]
+
+\startbuffer
+\setupheadertexts
+  [] % odd left
+  [] % odd right
+  [{\pagenumber\enspace\getmarking[chapter]}] % even left
+  [] % even right
+
+\setupheadertexts
+  [margin]
+  []
+  [\hfill\llap{\getmarking[section]\emspace\pagenumber}] 
+  % odd right
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Lists}]
+
+\startbuffer
+\setupitemgroup
+  [itemize]
+  [each]
+  [color=MyColors:2]
+\stopbuffer
+\typebuffer
+
+\startbuffer
+\defineitemgroup[abc]
+\setupitemgroup
+  [abc]
+  [each]
+  [a,columns,three,intro]
+  [stopper=,
+   left=(,
+   right=),
+   width=2em,
+   color=MyColors:2,
+   style={\tf}]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{13}
+\ShowPage{14}
+\ShowPage{15}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Kerning problem}]
+
+\bgroup
+\switchtobodyfont[bonum-nt]
+\tfd (f)
+\switchtobodyfont[bonum]
+\tfd (f)
+\egroup
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Descriptions}]
+
+\startbuffer
+\definedescription
+  [Comparison]
+  [alternative=text,
+   headcolor=MyColors:2,
+   width=3em]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{16}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Enumerations}]
+
+\startbuffer
+\defineenumeration[Theorem]
+
+\setupenumeration
+  [Theorem]
+  [alternative=serried,
+   title=yes,
+   way=bychapter,
+   prefix=chapter,
+   width=fit,
+   style=\it]
+
+\defineenumeration
+  [Lemma]
+  [Theorem]
+  [text=Lemma]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{17}
+\ShowPage{18}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Framed content}]
+
+\startbuffer
+\setupframedtext
+  [framecolor=MyColors:2,
+   width=fit]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{19}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Backgrounds}]
+
+\startbuffer
+\setuptextbackground
+  [location=paragraph,
+   backgroundcolor=MyColors:4,
+   backgroundoffset=1dk,
+   frame=off]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{20}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Graphics}]
+
+
+\startbuffer
+\defineexternalfigure
+  [text]
+  [width=\textwidth]
+
+\defineexternalfigure
+  [margin]
+  [width=\rightmarginwidth]
+
+\defineexternalfigure
+  [full]
+  [width=\dimexpr\textwidth+\rightmargintotal\relax]
+
+\startMPdefinitions
+...
+\stopMPdefinitions
+
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{21}
+\ShowPage{22}
+\ShowPage{23}
+\ShowPage{24}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Float captions}]
+
+\startbuffer
+\setupcaptions
+  [width=\rightmarginwidth,
+   align={width,hanging},
+   style={\tfx\setupinterlinespace}]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Text figures}]
+
+\startbuffer
+\definefloat
+  [text]
+  [figure]
+  [default=here,
+   location=right]
+
+\setupcaption
+  [text]
+  [location=rightmargin]
+\stopbuffer
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Bottom figures}]
+
+\startbuffer
+\definefloat
+  [bottom]
+  [figure]
+  [default={bottom,always},
+   location=rightmargin]
+
+\setupcaption
+  [bottom]
+  [location={top,overlay}]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Top figures}]
+
+\startbuffer
+\definefloat
+  [top]
+  [figure]
+  [default={top,always},
+   location=rightmargin]
+
+\setupcaption
+  [top]
+  [location={bottom,overlay}]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Margin figures}]
+
+\startbuffer
+\definefloat
+  [margin]
+  [figure]
+  [default={inright,reset}]
+
+\setupcaption
+  [margin]
+  [location=bottom]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Tables}]
+
+\startbuffer
+\setupfloat
+  [table]
+  [default=here,
+   location=right]
+
+\setupcaption
+  [table]
+  [location=rightmargin]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{28}
+\ShowPage{29}
+\ShowPage{30}
+\ShowPage{31}
+\ShowPage{32}
+\ShowPage{33}
+\ShowPage{34}
+\ShowPage{35}
+\ShowPage{36}
+\ShowPage{37}
+\ShowPage{38}
+\ShowPage{39}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Avoiding clashes}]
+
+\startbuffer
+\movesidefloat[y=10\lineheight]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{40}
+\ShowPage{41}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Mathematics}]
+
+\startbuffer
+\setupformulas
+  [spacebefore={big,samepage}]
+\stopbuffer
+
+\typebuffer
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Material in the margin}]
+
+\startbuffer
+\setupmarginblocks
+  [location=right,
+   width=\rightmarginwidth]
+
+\setupmargindata
+  [inrightmargin]
+  [style={\tfx\setupinterlinespace},
+   stack=yes,
+   align={width,hanging},
+   width=\rightmarginwidth]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Margin notes}]
+
+\startbuffer
+\definenote
+  [marginnote]
+  [footnote]
+  [location=text,
+   next=\PlaceMarginNote]
+
+\starttexdefinition PlaceMarginNote
+    \inrightmargin{%
+      \vtop{%
+      \placelocalnotes
+        [marginnote]
+        [before=,
+         after={\blank[small]}]
+      }
+    }
+\stoptexdefinition
+
+\setupnotation
+  [marginnote]
+  [way=bychapter,
+   alternative=serried,
+   width=broad]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ShowPage{42}
+\ShowPage{43}
+\ShowPage{44}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Table of contents}]
+
+
+\startbuffer
+\setupcombinedlist
+  [content]
+  [list={chapter},
+   alternative=a]
+
+\setuplist
+  [chapter]
+  [numberstyle=\bf,
+   numbercolor=MyColors:3,
+   ]
+\stopbuffer
+\typebuffer
+
+\startbuffer
+\placecontent
+  [criterium=all]
+\stopbuffer
+
+\typebuffer
+
+\ShowPage{46}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Index}]
+
+\startbuffer[index]
+\setupregister
+  [index]
+  [indicator=no,
+   pagestyle=,
+   n=2,
+   color=,
+   method=default]
+
+\defineregister
+  [symbolindex]
+  [index]
+  [indicator=no,
+   balance=yes,
+   n=4]
+\stopbuffer
+\typebuffer[index]
+
+\ShowPage{47}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[title={Interaction}]
+
+\startbuffer[interaction]
+\setupinteraction[
+  state=start,
+  focus=standard,
+  color=,
+  contrastcolor=,
+  style=,
+  title={Step by step},
+  author={Mikael Sundqvist},
+  keyword={A document built step by step},
+]
+\stopbuffer
+\typebuffer[interaction]
+
+\stoptext

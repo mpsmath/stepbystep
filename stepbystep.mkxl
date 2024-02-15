@@ -1,0 +1,1426 @@
+% This document is a bit special
+% The buffers here at the beginning are
+% used in order to show stuff later.
+% Better read the pdf first.
+
+\startbuffer[pagenumbering]
+\setuppagenumbering
+  [location=none,
+   alternative={singlesided,doublesided}]
+\stopbuffer
+\getbuffer[pagenumbering]
+
+\startbuffer[chapterpage]
+\setuphead
+  [chapter]
+  [page=yes]
+\stopbuffer
+\getbuffer[chapterpage]
+
+\startbuffer[interaction]
+\setupinteraction[
+  state=start,
+  focus=standard,
+  color=,
+  contrastcolor=,
+  style=,
+  title={Step by step},
+  author={Mikael Sundqvist},
+  keyword={A document built step by step},
+]
+\stopbuffer
+\getbuffer[interaction]
+
+\startbuffer[index]
+\setupregister
+  [index]
+  [indicator=no,
+   pagestyle=,
+   n=2,
+   color=,
+   method=default]
+
+\defineregister
+  [symbolindex]
+  [index]
+  [indicator=no,
+   balance=yes,
+   n=4]
+\stopbuffer
+\getbuffer[index]
+
+\starttext
+
+\startbuffer[MyColors]
+\usecolors[crayola]
+
+\definepalet
+  [MyColors]
+  [1=CosmicCobalt,
+   2=MysticPearl,
+   3=YellowOrange,
+   4=LemonYellow]
+\stopbuffer
+
+\startbuffer[titlepage]
+\startMPpage
+    fill Page enlarged 1mm withcolor "MyColors:1" ;
+
+    picture p ; p := textext( "\ttbf STEP"          ) ;
+    picture q ; q := textext( "\ttbf   B\kern-1ptY" ) ;
+    picture r ; r := textext( "\ttbf STEP"          ) ;
+
+    p := p xsized PaperWidth ;    
+    q := q xsized PaperWidth ;    
+    r := r xsized PaperWidth ;
+
+    p := (p shifted - (center p) shifted ( 0.5PaperWidth, 0.875PaperHeight ) ) ;
+    q := (q shifted - (center q) shifted ( 0.5PaperWidth, 0.5PaperHeight   ) ) ;
+    r := (r shifted - (center r) shifted ( 0.5PaperWidth, 0.125PaperHeight ) ) ;
+
+    draw p withcolor "MyColors:4" ;
+    draw q withcolor "MyColors:3" ;
+    draw r withcolor "MyColors:2" ;
+
+    setbounds currentpicture to Page ;
+\stopMPpage
+\stopbuffer
+\getbuffer[MyColors]
+\getbuffer[titlepage]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Introduction]
+
+The purpose of this document is to provide an example of a potential setup for a \ConTeXt\ document. We will demonstrate how to achieve this in a step-by-step manner. Our approach aims to be practical, reflecting the typical evolution of documents as we initially focus on the text and subsequently consider how to modify the style or introduce new environments.
+
+In a standard file, we typically add or modify content at the beginning of the document (or in a separate module if preferred). However, in this document, we will make changes along the way. Therefore, the typical structure of a file is as follows:
+
+\starttyping
+setups
+
+\starttext
+content
+\stoptext
+\stoptyping
+
+In this document, we begin without modifying the defaults and gradually make various changes throughout the process. The file structure is as follows:
+
+\starttyping
+\starttext
+content
+setups
+more content
+more setups
+...
+\stoptext
+\stoptyping
+
+As a result, the style of this document will evolve from page to page, which may cause certain pages to appear unusual or inconsistent.
+
+The style we have adopted draws inspiration from Edward Tufte's books. We will utilize a page with dimensions of \typ{8.5es} in width and \typ{11es} in height. Furthermore, we will employ a large right margin where notes, references, and figures can be added. Although we will deviate from Tufte's style (as it varies across his different books) in aspects such as font selection, chapter numbering, and exact measurements.
+
+It is important to note that the style presented in this document is only one option, and we encourage you to consider your own needs. Additionally, we will not cover the installation or configuration of \ConTeXt, as we assume that it is already set up and running. Furthermore, we will not explain every command we use or their various keys. If you need to look up a particular command or aspect, we recommend searching \typ{wiki.contextgarden.net} or referring to the command reference manual at \typ{http://www.pragma-ade.com/general/qrcs/setup-en.pdf}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=The size of the paper]
+
+\startbuffer
+\definepapersize
+  [example]
+  [width=8.5es,
+   height=11es]
+
+\setuppapersize[example]
+\stopbuffer
+
+\getbuffer
+
+We will start by adjusting the paper size. By default, the paper size in \ConTeXt\ is set to \typ{A4}. However, this can be modified easily using the \tex{setuppapersize} command. As you can see, the size of this page is different from the previous one. We achieved this by using the following code:
+
+\typebuffer
+
+It is worth mentioning that there are various predefined paper sizes available, such as \typ{A4} (the default), \typ{A5}, and \typ{letter}. We opted to define our own paper size using the \tex{definepapersize} command, as we wanted to provide an example of a typical custom size.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=The layout of the page]
+
+% In a document where one would not need to turn this off, one could simply do
+% \showframe and the frames would be there.
+
+\startsetups[showframe]
+  \setupbackgrounds 
+    [header,text,footer]
+    [leftmargin,text,rightmargin]
+    [frame=on]
+\stopsetups
+
+\startsetups[hideframe]
+  \setupbackgrounds
+    [header,text,footer]
+    [leftmargin,text,rightmargin]
+    [frame=off]
+\stopsetups
+
+\setup[showframe]
+
+To configure the page layout, we make use of the \tex{setuplayout} command. To help visualize the layout, we have enabled the frames using the \tex{showframe} command (in a slightly more complex manner to allow toggling on and off) on top of this page. This is the reason why the frames are visible.
+
+There are several areas of the page that can be configured. Horizontally, these include the left edge, left margin, text, right margin, and right edge. Vertically, the areas include the top, header, text, footer, and bottom. In the style that we will set up, the edges and the left margin, as well as the footer, will not be used (the corresponding dimensions set to 0pt). Instead, we will make use of a rather large right margin. You can compare the frames on this page with the ones on the next page to see the effect of the changes we make.
+
+\page[yes]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\startbuffer
+\setuplayout
+  [backspace=0.1\paperwidth,
+   leftmargin=0pt,
+   rightmargindistance=0.025\paperwidth,
+   rightmargin=0.25\paperwidth,
+   width=fit,
+   topspace=0.075\paperheight,
+   header=\lineheight,
+   headerdistance=0.025\paperwidth,
+   footerdistance=0pt,
+   footer=0pt,
+   height=fit]
+\stopbuffer
+
+\getbuffer
+
+On this page, we ran the command:
+
+\typebuffer
+
+As you can see, this has resulted in a completely different layout. As mentioned before, this is not the place to discuss the different parameters set, but we can mention that the space between the left side of the page and the text block is set using the \typ{backspace} key, and it is currently set to one tenth of the page width. The parameters with \quotation{distance} in their names control the distances between different areas. For example, \typ{rightmargindistance} is the distance between the text area and the right margin.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Choosing a font]
+
+\setup[hideframe]
+
+There are several free and aesthetically pleasing fonts that come with \ConTeXt. In this document, we will use TeX Gyre Bonum. We can apply this font to our document by invoking:
+
+\starttyping
+\setupbodyfont[bonum]
+\stoptyping
+
+However, we will use a slightly more advanced technique. By default, the font size is 12pt with an interline spacing of 2.8ex, where ex stands approximately for the height of an 'x'. We will instead use a font size of 9pt and an interline space of 14pt.
+
+\startbuffer
+\definefontfeature
+  [default]
+  [default]
+  [protrusion=quality]
+
+\definebodyfontenvironment
+  [9pt]
+  [interlinespace=13pt]
+
+\setupbodyfont[bonum,9pt]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+After this, the text in our document will be set in TeX Gyre Bonum with the desired font size and interline spacing. Typically, it is not necessary to switch fonts multiple times within a document. If you do need to switch fonts, it is recommended to load the fonts using \tex{usebodyfont} at the beginning of the document, then enable the font to use first with \tex{setupbodyfont}, and finally use \tex{switchtobodyfont} to switch between fonts. (We do not follow this advice in this document.)
+
+The distribution of \ConTeXt\ includes a number of other fonts such as concrete, dejavu, ebgaramond, erewhon, kpfonts, libertinus, modern, newcomputermodern-book, pagella, schola, stixtwo, termes, and xcharter. Partial support is also available for commercial fonts such as cambria, lucida, and minion.
+
+The \tex{definefontfeature} code will become active once we add \type{hanging} to the \tex{setupalign} command, which we will do soon, but first let us introduce some colors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title={Colors}]
+
+We already used some colors on the front page, and we would like to use more. To ensure flexibility while maintaining consistency, we will define a palet (this was done already at the title page, you will recognize the colors from there).
+
+\typebuffer[MyColors]
+
+The first line provides us with the crayola crayon set of colors. We can have a look at our palet with
+
+\startbuffer
+\showpalet[MyColors]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+We can see that the four colors are distinguishable when converted to grayscale.
+
+\startbuffer
+We can \color[MyColors:2]{use our colors}.
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Code listings]
+
+\startbuffer
+\setuptyping
+  [color=MyColors:1]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+This is how it now looks:
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title={Alignment, indentation and spacing}]
+
+By default, text is justified and there is no indentation at the beginning of the paragraphs, and no extra space between them. Although it is possible to create indented paragraphs using \tex{setupindenting}, we will not use this option.
+
+\startbuffer
+\setupalign[hanging,height]
+
+\setupwhitespace[big]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+The \type{hanging} key enables protrusion. The amount was previously defined using  \tex{definefontfeature}. We will not use \type{expansion}, but we could have added that by adding \typ{expansion=quality} to the \tex{definefontfeature} and \typ{hz} to the \tex{setupalign}.
+
+The \type{height} key is there to flush content (like the bottom figures that we will use) all the way down at the bottom of the text block.
+
+Since we do not use indentation, we have added some space between paragraphs with help of \tex{setupwhitespace}. You can give exact values, like 1cm, but key values like line, small, medium and big are also possible.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title={Chapters and sections}]
+
+We will use two levels of headings, chapters and sections. Chapters will be numbered, while sections will remain unnumbered. For fun, we will set the chapter numbering in a different color. We also remove the header on chapter pages.
+
+
+\startbuffer
+\setuphead
+  [chapter]
+  [style={\switchtobodyfont[24pt]\bf},
+   numbercolor=MyColors:3,
+   header=high,
+   page=yes,
+   distance=2em]
+\stopbuffer
+\getbuffer
+\typebuffer
+
+In fact, the \typ{page=yes} in the setup of the chapter was done already at the beginning of this file. Otherwise, the new chapters would have started on odd pages, and we would have had many blank pages. 
+
+The section titles will be set with upper case bold letters, with a little letter spacing added. 
+
+\startbuffer
+\definecharacterkerning
+  [Section]
+  [factor=0.07]
+
+\setuphead
+  [section]
+  [style={\bf\WORD\setcharacterkerning[Section]},
+   number=no]
+\stopbuffer
+\getbuffer
+\typebuffer
+
+In the following pages you see the result of these setups. Alternatively, instead of disabling section numbering, we could have used the \typ{subject} heading, which gives an unnumbered version of \typ{section}. For completeness, we mention that \typ{title} is an unnumbered version of \typ{chapter}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Headers]
+
+You might have noticed that there have been no page numbers in this document so far. By default, page numbers are displayed in the header. But that is one thing we switched off with the \type{location=none} in the following setup.
+
+\typebuffer[pagenumbering]
+
+The reason that we invoked this command at the beginning and not here in the middle of the text is that it would possibly have added a few blank pages.
+
+First we have set up the style of the headers. As in the case of section headings, we add some letter spacing. We also use \tex{WORD} to get upper case letters in the headers.
+
+\startbuffer
+\definecharacterkerning
+  [Header]
+  [factor=0.05]
+
+\setupheader
+  [style={\WORD\setcharacterkerning[Header]}]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+Below we specify the content. The \tex{setupheadertexts} macro is pretty smart, in the sense that it will do different types of setups depending on the number of arguments you give.
+
+\startbuffer
+\setupheadertexts
+  [] % odd left
+  [] % odd right
+  [{\pagenumber\enspace\getmarking[chapter]}] % even left
+  [] % even right
+
+\setupheadertexts
+  [margin]
+  []
+  [\hfill\llap{\getmarking[section]\emspace\pagenumber}] 
+  % odd right
+\stopbuffer
+\getbuffer
+\typebuffer
+
+It's worth mentioning that while \typ{setupheadertexts} may seem specific to setting up headers, there are similar commands for other layout areas. In a previous section, we discussed the different areas of the layout. For instance, you can add content to the right edge using \typ{\setuptexttexts[rightedge]}, provided that the width of this area was set to a positive length.
+
+In the upcoming chapter, which spans several pages, you'll be able to see the effect of the setups made in this chapter.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Lists]
+
+\section[title=Bullet lists]
+
+The default output of the \typ{itemize} environment looks fine.
+
+\startbuffer[bulletlist]
+\startitemize
+  \item Why was the computer science student confused?
+  \startitemize
+    \item Because they kept trying to understand the 
+          difference between a stack and a queue, but 
+          they just ended up in a linked list.
+  \stopitemize
+  \item What did they do to try to straighten things out?
+  \startitemize
+    \item They tried to use a graph data structure to 
+          visualize the relationships, but they just ended 
+          up with a tree.
+    \startitemize
+      \item What did their friend say about this?
+      \startitemize
+        \item \quotation{Well, at least you didn't end 
+              up with a heap.}
+      \stopitemize
+    \stopitemize
+  \stopitemize
+\stopitemize
+\stopbuffer
+\typebuffer[bulletlist]
+\getbuffer[bulletlist]
+
+We only change the colors of the list items.
+
+\startbuffer
+\setupitemgroup
+  [itemize]
+  [each]
+  [color=MyColors:2]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+Now the same input yields the following output:
+
+\getbuffer[bulletlist]
+
+\section[title=Numbered lists]
+
+The color also spills over to numbered lists, which are obtained by adding \typ{[n]} as an argument to \tex{startitemize}. Below is an example.
+
+\startitemize[n]
+  \item The mathematician was stuck in a state of indecision, unable to choose between starting at 1 or starting at 0.
+  \item The mathematician was worried about the potential for negative numbers, and couldn't decide if they should be included in the list or not.
+  \item The mathematician was concerned about the potential for infinite numbers, and wasn't sure if they should be included in the list or not.
+  \item The mathematician was so focused on theoretical concepts and abstractions that they couldn't seem to bring themselves to make a concrete, tangible list.
+\stopitemize
+
+\section[title=Alphabetic lists]
+
+It can be handy to have alphabetic lists set in several columns, for example if we have exercises. We define such an itemization.
+
+\startbuffer
+\defineitemgroup[abc]
+\setupitemgroup
+  [abc]
+  [each]
+  [a,columns,three,intro]
+  [stopper=,
+   left=(,
+   right=),
+   width=2em,
+   color=MyColors:2,
+   style={\tf}]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+We can now test it. Observer that we here use \typ{\startitem} and \typ{\stopitem} instead of just \typ{\item} as before. This is necessary for itemizations that run in columns.
+
+\startbuffer
+\startitemgroup[abc]
+  \startitem \im{x^a}     \stopitem
+  \startitem \im{a^x}     \stopitem
+  \startitem \im{\exp(x)} \stopitem
+  \startitem \im{\ln(x)}  \stopitem
+  \startitem \im{\cos(x)} \stopitem
+  \startitem \im{\sin(x)} \stopitem
+\stopitemgroup
+\stopbuffer
+\typebuffer
+\getbuffer
+
+If we for some list want to add another column, we do not need to define a completely new itemgroup, but we can give an argument.
+
+\startbuffer
+\startitemgroup[abc][four]
+  \startitem \im{x^a}     \stopitem
+  \startitem \im{a^x}     \stopitem
+  \startitem \im{\exp(x)} \stopitem
+  \startitem \im{\ln(x)}  \stopitem
+  \startitem \im{\cos(x)} \stopitem
+  \startitem \im{\sin(x)} \stopitem
+  \startitem \im{\tan(x)} \stopitem
+  \startitem \im{\cot(x)} \stopitem
+\stopitemgroup
+\stopbuffer
+\typebuffer
+\getbuffer
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Descriptions]
+
+\startbuffer
+\definedescription
+  [Comparison]
+  [alternative=text,
+   headcolor=MyColors:2,
+   width=3em]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+We are now ready to do a comparison.
+
+\startbuffer
+\startComparison{Dodo} The majestic dodo is the clear winner of this comparison. With its large, fluffy feathers and intelligent gaze, it towers above the duck and cow in both beauty and brains.
+\stopComparison
+
+\startComparison{Duck} The poor, misguided duck tries its best, but it just can't compete with the superior dodo. Its webbed feet and quack are no match for the dodo's grace and wit.
+\stopComparison
+
+\startComparison{Cow} Oh dear, the cow. It's hard to even compare the bovine beast to the graceful dodo. Its moo is no match for the dodo's melodic cooing, and its plodding gait can't hold a candle to the dodo's elegant stride.
+\stopComparison
+\stopbuffer
+
+\typebuffer
+\index{dodo}\index{duck}\index{cow}
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Enumerations]
+
+Enumerations are like numbered descriptions, and they share some code. We will, as an example, use an enumeration to set up a theorem style. We start by definining our new environment.
+
+\startbuffer
+\defineenumeration[Theorem]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+\startbuffer[potatotheorem]
+\startTheorem[title={The potato theorem (Spud, 1913)}]
+The number of potatoes \im{P(n)} that fit inside a box is given by
+\startformula
+P(n) = \frac{ V }{ n^2 + 1 },
+\stopformula
+where \im{n} is the size of the potatoes in millimeters and \im{V} is the volume of the box in cubic millimeters.
+\stopTheorem
+\stopbuffer
+
+We now have access to \typ{\startTheorem} and \typ{\stopTheorem}, so we can run
+
+\typebuffer[potatotheorem]
+
+The result is this:\index{potato}\index{Spud}\symbolindex[P]{\im{P(n)}}\symbolindex[V]{\im{V}}
+
+\getbuffer[potatotheorem]
+
+This is not how we want a theorem to look like, so we will make some setups to obtain what we want. In the set up below, we mention a few things. We move the head to the text by \typ{alternative=serried}. We enable the title (which was not shown at all in the example above) with \typ{title=yes}. We also want the numbering to include the chapter numbers, and we want to reset the counter at each new chapter.
+
+\startbuffer
+\setupenumeration
+  [Theorem]
+  [alternative=serried,
+   title=yes,
+   way=bychapter,
+   prefix=chapter,
+   width=fit,
+   style=\it]
+\stopbuffer
+\getbuffer
+\typebuffer
+
+The result of the example code above now looks like this:
+
+\getbuffer[potatotheorem]
+
+Say that we are happy with this. Maybe we also have a Lemma. We can then do
+
+\startbuffer
+\defineenumeration
+  [Lemma]
+  [Theorem]
+  [text=Lemma]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+This defines a new enumeration lemma as a copy of the theorem enumeration, with the extra set up that the text should be Lemma and not Theorem. We test this new lemma environment. Thus, we type
+
+\startbuffer
+\startLemma
+For any dodo \im{D}, there exists a unique dodo \im{D'} such that the product \im{DD'} is equal to the universal dodo constant \im{K}.
+\stopLemma
+\stopbuffer
+
+\typebuffer
+
+to get\symbolindex[D]{\im{D}}\symbolindex[D]{\im{D'}}
+
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Framed content]
+
+We set up the layout for framed content, but as the text in the example below says, it is probably a good idea to use it sparingly.
+
+\startbuffer
+\setupframedtext
+  [framecolor=MyColors:2,
+   width=fit]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\startbuffer
+\startframedtext
+Framed content can help to highlight and emphasize certain content within a layout. By presenting content within a frame, it can draw the reader's attention to that specific content and make it stand out on the page. This can be useful for highlighting important information or calls to action, or for separating different types of content within a layout. However, it's important to use framed content sparingly and consider the overall layout and design of the page to ensure that it does not become visually distracting or hinder the reader's ability to follow the flow of the content.
+\stopframedtext
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Backgrounds]
+
+\startbuffer
+\setuptextbackground
+  [location=paragraph,
+   backgroundcolor=MyColors:4,
+   backgroundoffset=1dk,
+   frame=off]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\startbuffer
+\starttextbackground
+Like framed content, using a background color for certain content can also be a good typographical choice in certain circumstances. For example, using a background color can help to highlight and emphasize specific content within a layout, similar to how a frame can. It can also be used to add visual interest to a layout and help to break up large blocks of text. However, like framed content, it's important to use background colors sparingly and consider the overall layout and design of the page. Using too many background colors or using colors that are too bright or conflicting with the rest of the layout can be visually distracting and hinder the reader's ability to focus on the content. It's also important to consider accessibility when using background colors, as some users may have difficulty reading text on certain backgrounds or may be using a screen reader that has trouble interpreting text with a background color.
+\stoptextbackground
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\startbuffer
+\definetextbackground
+  [Highlight]
+  [location=text,
+   backgroundoffset=0pt]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+\startbuffer
+It is possible to \Highlight{highlight} some text in a paragraph, with \typ{location=text}. This should of course be used even more sparingly, since it \Highlight{destroys the flow} of the reading.
+\stopbuffer
+\typebuffer
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Graphics]
+
+\section[title=External graphics]
+
+\startbuffer
+\useMPlibrary[dum]
+
+\setupexternalfigures
+  [text=no]
+
+\definepalet
+  [placeholder]
+  [1=CosmicCobalt,
+   2=MysticPearl,
+   3=YellowOrange,
+   4=LemonYellow]
+
+\stopbuffer
+\getbuffer
+
+Documents often include graphics elements. We can insert external graphics with \tex{externalfigure}. For the purpose of this document we do not want to depend on any external files, but we want to have some nice looking replacement for figures that do not exist, so we will use a \MetaPost\ library that gives some colorful graphic in case an image does not exist. We will use the name \type{nonexisting}. To set this up, we have run
+
+\typebuffer
+
+The color palet \typ{placeholder} is the one used by the \typ{dum} \MetaPost\ library, and we have changed it so that it matches the four colors used in this document.
+
+We can now type 
+
+\startbuffer
+\externalfigure
+  [nonexisting]
+  [width=0.5\textwidth,
+   height=3\lineheight]
+\stopbuffer
+
+\typebuffer
+
+to get a graphic that has a height of three lines:
+
+\getbuffer
+
+Note that the spacing around it is not good. We can do better if we insert it into a so-called text display.
+
+\startbuffer[fig2]
+\starttextdisplay
+\externalfigure
+  [nonexisting]
+  [width=0.75\textwidth,
+   height=3\lineheight]
+\stoptextdisplay
+\stopbuffer
+
+\getbuffer[fig2]
+
+The spacing around the graphic looks indeed better. Here we used
+
+\typebuffer[fig2]
+
+We will later see what we can do if we want our figures to be placed at certain places (top, bottom, margin), with captions. Next, we make some definitions that will make it a bit more convenient for us later when we insert images. We predefine a couple of images that has certain widths. 
+
+\startbuffer
+\defineexternalfigure
+  [text]
+  [width=\textwidth]
+
+\defineexternalfigure
+  [margin]
+  [width=\rightmarginwidth]
+
+\defineexternalfigure
+  [full]
+  [width=\dimexpr\textwidth+\rightmargintotal\relax]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+We use these by
+
+\startbuffer
+\externalfigure
+  [nonexisting]
+  [text]
+  [height=2cm]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+
+\startbuffer
+\inrightmargin{%
+  \externalfigure
+    [nonexisting]
+    [margin]
+    [height=1cm]
+}
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\startbuffer
+\externalfigure
+  [nonexisting]
+  [full]
+  [height=3cm]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+
+\section[title={\MetaPost\ and \MetaFun\ graphics}]
+
+It is very convenient to use \MetaPost\ and \MetaFun\ graphics in \ConTeXt. We will not go much into details, but only mention that it can be useful to place some common definitions at the beginning of the document
+
+\starttyping
+\startMPdefinitions
+...
+\stopMPdefinitions
+\stoptyping
+
+We will not add any definitions in this document, but rather give one example on how one can include rather complex \MetaPost\ figures in a convenient way. First, we put the figure into a buffer.
+
+\startbuffer[metabifurcation]
+  \startbuffer[bifurcation]
+  \startMPpage
+  u := 8cm ;
+  for r = 2.75 step 0.001 until 4 :
+    x[0] := 0.2 ;
+    for i = 0 upto 800 :
+      x[i+1] := r*x[i]*(1 - x[i]) ;
+      if i > 699 :
+        drawdot(r, x[i]) scaled u ;
+      fi
+    endfor
+  endfor
+  \stopMPpage
+  \stopbuffer
+\stopbuffer
+
+% \typebuffer[metabifurcation]
+% \getbuffer[metabifurcation]
+
+
+% \startbuffer[metametabifurcation]
+%   \typesetbuffer[bifurcation]
+% \stopbuffer
+
+% Then we can type
+
+% \typebuffer[metametabifurcation]
+
+% to get the image
+
+% \getbuffer[metametabifurcation]
+
+If you have compiled this document, you might have noticed that it looks like the compilation freezes for a few seconds. That is due to this \MetaPost\ image that runs long nested loops. But, since we have put it inside a buffer, it does not need to be re-compiled for the next run.
+
+We show one more example, where we want to make two points. The first one is that this is an example that shows that it is possible to build graphics step by step and the second one is that we want to show how to use our predefined colors inside \MetaPost.
+
+We start by defininig a graphic that has some common elements.
+
+\startbuffer
+\startuseMPgraphic{transversalbase}
+  u := 2cm ;
+  z0 = origin ;
+  z1 = (u,2u) ;
+  z2 = (3u,0) ;
+  z3 = 0.4[z0,z1] ;
+  z4 = 0.4[z2,z1] ;
+  label.ulft( "\im{a}",  0.6[z0, z1] ) ;
+  label.ulft( "\im{b}", 0.15[z0, z1] ) ;
+  label.urt ( "\im{c}",  0.6[z2 ,z1] ) ;
+  label.urt ( "\im{d}", 0.15[z2, z1] ) ;
+\stopuseMPgraphic
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+We then use this in two different images.
+
+\startbuffer
+\startMPcode
+  \includeMPgraphic{transversalbase}
+  fill z0 -- z4 -- z3 -- cycle withcolor "MyColors:1" ;
+  fill z3 -- z1 -- z4 -- cycle withcolor "MyColors:3" ;
+  draw z0 -- z1 -- z2 -- cycle ;
+  draw z3 -- z4 ;
+\stopMPcode
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\startbuffer
+\startMPcode
+  \includeMPgraphic{transversalbase}
+  fill z2 -- z4 -- z3 -- cycle withcolor "MyColors:1" ;
+  fill z3 -- z1 -- z4 -- cycle withcolor "MyColors:3" ;
+  draw z0 -- z1 -- z2 -- cycle ;
+  draw z3 -- z4 ;
+\stopMPcode
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Floats]
+
+\section[title=Introduction]
+
+\startbuffer
+\startplacefloat
+  [figure]
+  [title={This is how the figure captions look by default.}]
+  \externalfigure
+    [nonexisting]
+    [width=8cm,
+     height=2cm]
+\stopplacefigure
+\stopbuffer
+
+\getbuffer
+
+This was typeset with the code
+
+\typebuffer
+
+\definedescription
+  [figuretypes]
+  [alternative=text,
+   headstyle=\tt,
+   width=4em]
+
+We will set up several different figure float types:
+
+\setupdescription
+  [Comparison]
+  [width=4em]
+
+\startComparison{text}
+located in the text block, with caption in the right margin.
+\stopComparison
+
+\startComparison{bottom}
+located at the bottom of the page, with caption in the right margin, just above the figure.
+\stopComparison
+
+\startComparison{top}
+located at the top of the page, with caption in the right margin, just below the figure.
+\stopComparison
+
+\startComparison{margin}
+located in the right margin, with caption just below the figure.
+\stopComparison
+
+The different float types will have in common that their captions will be located in the right margin, widh the width set to the right marginwidth, and they will also be flush left. Not to need to repeat this for all float types, we set it up at once.
+
+\startbuffer
+\setupcaptions
+  [width=\rightmarginwidth,
+   align={width,hanging},
+   style={\tfx\setupinterlinespace}]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+
+
+\section[title=Text figures]
+
+Our first type of floats is the ones inserted in text. The width of these images shall not be bigger than the width of the text block. We define the float \typ{text} as a copy of the float \typ{figure}, with the only set up that it should default to \typ{here}. We also let the images anchor to the right margin by adding \typ{location=right}.
+
+\startbuffer
+\definefloat
+  [text]
+  [figure]
+  [default=here,
+   location=right]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+We also make sure that its captions will end up in the right margin.
+
+\startbuffer
+\setupcaption
+  [text]
+  [location=rightmargin]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+Let us try it out. Since captions are typically long, the code might be easier to read if we put them into buffers.
+
+\startbuffer[textfloat]
+\startbuffer[caption]
+This is the caption that is placed in the right margin.
+\stopbuffer
+
+\startplacefloat
+  [text]
+  [title={\getbuffer[caption]},
+   reference={fig:firsttextfigure}]
+  \externalfigure
+    [nonexisting]
+    [width=0.6\textwidth,
+     height=3cm]
+\stopplacefloat
+\stopbuffer
+
+\typebuffer[textfloat]
+\getbuffer[textfloat]
+
+\startbuffer[ref]
+\in{Figure}[fig:firsttextfigure]
+\stopbuffer
+
+Note that the image is anchored to the right.
+Since we also added the \typ{reference} key, we can refer to the figure. By typing \typeinlinebuffer[ref] we get \inlinebuffer[ref].
+
+\section[title=Bottom figures]
+
+Our next type of image is for wider images that occupy both the textblock and the right margin, placed at the bottom of the page. We first do 
+
+\startbuffer
+\definemeasure
+  [fullwidth]
+  [\textwidth+\rightmargintotal]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+to define the measure \quotation{fullwidth} that has the right dimension. We next define the float \typ{bottom} with 
+
+\startbuffer
+\definefloat
+  [bottom]
+  [figure]
+  [default={bottom,always},
+   location=rightmargin]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+The \typ{location=rightmargin} ensures that the images do anchor at the right margin. We set up its caption with
+
+\startbuffer
+\setupcaption
+  [bottom]
+  [location={top,overlay}]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+The captions will thus be placed at the top of the images. The \typ{overlay} will put the captions into an overlay so that they do not interfere with the surrounding text at all. This is convenient to not get white gaps over the figures, but it also means that we have to be careful so that other margin material is not interfering with the captions.
+
+\section[title=Top figures]
+
+We define the top figures as the bottom figures, but with the words \typ{top} and \typ{bottom} interchanged.
+
+\startbuffer
+\definefloat
+  [top]
+  [figure]
+  [default={top,always},
+   location=rightmargin]
+
+\setupcaption
+  [top]
+  [location={bottom,overlay}]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+\section[title=Margin figures]
+
+We have come to our last type of figures. These should end up in the right margin, close to the point where they are added in text. They are defined as so-called side float. By default one gets white space in the text block, but with the \typ{reset} key, we avoid this.
+
+\startbuffer
+\definefloat
+  [margin]
+  [figure]
+  [default={inright,reset}]
+
+\setupcaption
+  [margin]
+  [location=bottom]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+
+\section[title=Some testing]
+
+We test our floats over the next few pages. There might be clashes, and we will discuss later FIXME how to resolve such issues. That is, however, something to do as a last step since the content might reflow during the writing.
+
+The pages below are generated with the following code.
+
+\usemodule[simulate]
+
+\startbuffer
+\dorecurse{4}{
+  \section
+    [title={Example: loop level #1}]
+  \dorecurse{4}{
+    \fakewords{40}{60}\par%40 60
+  }
+  \startplacefloat
+    [text]
+    [title={A text figure that was placed in loop level #1.}]
+    \externalfigure
+      [nonexisting]
+      [text]
+      [height=#1cm]
+  \stopplacefloat
+  \startplacefloat
+    [bottom]
+    [title={A bottom figure that was placed in loop level #1.}]
+    \externalfigure
+      [nonexisting]
+      [full]
+      [height=\dimexpr5cm-#1cm\relax]
+  \stopplacefloat
+  \dorecurse{5}{
+    \fakewords{30}{70}\par% 50 100
+  }
+  \startplacefloat
+    [margin]
+    [title={A margin figure that was placed in the loop level #1.}]
+    \externalfigure
+      [nonexisting]
+      [margin]
+      [height=2cm]
+  \stopplacefloat
+  \startplacefloat
+    [top]
+    [title={A top figure that was placed in loop level #1.}]
+    \externalfigure
+      [nonexisting]
+      [full]
+      [height=\dimexpr7cm-#1cm\relax]
+  \stopplacefloat
+  \dorecurse{5}{
+    \fakewords{40}{80}\par% 40 80
+  }
+
+}
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\section[title=Tables]
+
+Tables can be set up in a similar fashion according to neeeds. We do not do that here, but only show one example of the standard set up. We first move the caption of the table to the top.
+
+\startbuffer
+\setupfloat
+  [table]
+  [default=here,
+   location=right]
+
+\setupcaption
+  [table]
+  [location=rightmargin]
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+To make tables there are several ways. We will just a small table using the \typ{tabulate} environment. One can also use so-called natural tables (the \typ{TABLE} environment) which behave a bit like HTML tables.
+
+\startbuffer
+\startplacefloat
+  [table]
+  [title={This is how our tables look. This one has 
+   some facts about dodos, ducks and cows.}]
+\starttabulate[|l|l|r|r|]
+\FL
+\NC \bf Common name \NC \bf Status    \NC \bf Size (cm) \NC \bf Weight (kg) \NR \ML
+\NC Dodo            \NC Extinct       \NC 100           \NC 20              \NR
+\NC Mallard         \NC Least Concern \NC 50            \NC 0.7             \NR
+\NC Domestic Cow    \NC Not Evaluated \NC 150           \NC 600             \NR \BL
+\stoptabulate
+\stopplacefloat
+\stopbuffer
+\typebuffer
+\getbuffer
+
+\section[title={Avoiding clashes}]
+
+Since we use overlays when making the captions of top and bottom figures, it is impossible to avoid clashes with the margin figures automatically. There is, however, a mechanism to move sidefloats up and down.
+
+\page[yes]
+
+\startbuffer[topfigure]
+\startplacefloat
+  [top]
+  [title={\samplefile{tufte}}]
+  \externalfigure
+    [nonexisting]
+    [full]
+    [height=3cm]
+\stopplacefloat
+\stopbuffer
+\getbuffer[topfigure]
+
+We have placed a top figure on this page. We also place a margin figure. Note that the margin figure overlaps the caption of the top figure.
+\startbuffer[marginfigure]
+\startplacefloat
+  [margin]
+  [title={This is a caption of the float 
+          in the right margin.}]
+  \externalfigure
+    [nonexisting]
+    [margin]
+\stopplacefloat
+\stopbuffer
+\getbuffer[marginfigure]
+
+Here, the top figure was placed with
+
+\typebuffer[topfigure]
+
+and the margin figure with
+
+\typebuffer[marginfigure]
+
+At the next page we show how to avoid this clash.
+
+\page[yes]
+
+\getbuffer[topfigure]
+
+We have placed a top figure on this page. We also place a margin figure.
+
+\startbuffer[marginfigure]
+\movesidefloat[y=10\lineheight]
+\startplacefloat
+  [margin]
+  [title={This is a caption of the float 
+          in the right margin.}]
+  \externalfigure
+    [nonexisting]
+    [margin]
+\stopplacefloat
+\stopbuffer
+
+\getbuffer[marginfigure]
+
+Here, the top figure was placed with
+
+\typebuffer[topfigure]
+
+and the margin figure with
+
+\typebuffer[marginfigure]
+
+We have successfully used \tex{movesidefloat} to push the margin figure down. We emphasize again that this kind of fine tuning should be the very last thing you do with your document, since they are sensitive for small perturbations in the text.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Margin notes]
+
+\section[title={How do we add stuff\crlf into the margin?},marking={How do we add stuff into the margin?}]
+
+With the big margins we have it would be a waste not to put more material in them. We will define our own margin notes below, but let us first point out the two different mechanisms in \ConTeXt\ to add content into the margin. We can use margin data:
+
+\startbuffer
+\inrightmargin
+  {This is a margindata text 
+   that goes into the margin.}
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+Then there is also the margin block.
+
+\startbuffer
+\setupmarginblocks
+  [location=right,
+   width=\rightmarginwidth]
+
+\startmarginblock
+This is some marginblock text that goes into the margin.
+\stopmarginblock
+\startmarginblock
+This is another marginblock text that goes into the margin.
+\stopmarginblock
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+Let us add another margin data:
+
+\startbuffer
+\inrightmargin
+  {This is another margindata text 
+   that goes into the margin.}
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+We observe that the margin data ends up in the margin where it is called, while the margin block (by default) is flushed to the top.
+
+\section[title={How do \emph{we} add stuff\crlf into the margin?},marking={How do we add stuff into the margin?}]
+
+We want to be able to have the margin content close to where it was called in the source, and therefore we will use the margin data. We must be aware that the content in the margin from different calls can clash:
+
+\startbuffer[doweclash]
+\inrightmargin{First call}
+\inrightmargin{Second call}
+\stopbuffer
+
+\getbuffer[doweclash]
+\typebuffer[doweclash]
+
+This is where manual work will have to come in. We can for example use the \typ{dy} key to push the content up or down.
+
+\startbuffer
+\inrightmargin{Third call}
+\inrightmargin[dy=2\lineheight]{Fourth call}
+\stopbuffer
+
+\getbuffer
+\typebuffer
+
+We can often avoid the clashing by giving \type{stack=yes} to \tex{setupmargindata}. We also want the size of the text in the margin to be smaller, and hence we give the following setup.
+
+\startbuffer
+\setupmargindata
+  [inrightmargin]
+  [style={\tfx\setupinterlinespace},
+   stack=yes,
+   align={width,hanging},
+   width=\rightmarginwidth]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+We can now try the example above again.
+
+\getbuffer[doweclash]
+\typebuffer[doweclash]
+
+It seems that we do not in general clash, and that the text is now a bit smaller. We are now ready to make our own definitions of the margin notes. We also want them numbered, and that needs some work.
+
+\startbuffer
+\definenote
+  [marginnote]
+  [footnote]
+  [location=text,
+   next=\PlaceMarginNote]
+
+\starttexdefinition PlaceMarginNote
+    \inrightmargin{%
+      \vtop{%
+      \placelocalnotes
+        [marginnote]
+        [before=,
+         after={\blank[small]}]
+      }
+    }
+\stoptexdefinition
+
+
+\setupnotation
+  [marginnote]
+  [way=bychapter,
+   alternative=serried,
+   width=broad]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+\dorecurse{5}{
+  \fakewords{20}{40}
+  \marginnote{\fakewords{10}{20}}
+  \fakewords{30}{50}\par
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Mathematics]
+
+We will not change much when it comes to mathematics. But by default, formulas can occur at the top of the page, and we want to avoid that. Therefore we do
+
+\startbuffer
+\setupformulas
+  [spacebefore={big,samepage}]
+\stopbuffer
+
+\typebuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Table of contents]
+
+Combined lists\index{combined list} are used for table of contents (and other similar tables one can define). 
+
+\startbuffer
+\setupcombinedlist
+  [content]
+  [list={chapter},
+   alternative=a]
+
+\setuplist
+  [chapter]
+  [numberstyle=\bf,
+   numbercolor=MyColors:3,
+   ]
+\stopbuffer
+\typebuffer
+\getbuffer
+
+\startbuffer
+\placecontent
+  [criterium=all]
+\stopbuffer
+
+\typebuffer
+\getbuffer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Index]
+
+\typebuffer[index]
+
+The index is very small, but looks like this:
+
+\placeregister
+  [index]
+
+The symbol index is also small, and it looks like this:
+
+\placeregister
+  [symbolindex]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter[title=Interaction]
+
+This document is interactive. We have used
+
+\typebuffer[interaction]
+
+to obtain this.
+
+\stoptext
+
+
+
+
+
+
+
+
+
+
+
+
+
+
